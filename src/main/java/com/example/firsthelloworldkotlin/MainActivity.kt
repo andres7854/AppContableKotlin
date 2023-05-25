@@ -65,29 +65,36 @@ fun MyText(toWrite: String, color: Color, style: TextStyle){
 //string values
 
 var stringValuesArray:ArrayList<String> = arrayListOf()
-
+var actualInputId: Int = 0
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyInput(label: String){
 
-    var id: Int = if ( stringValuesArray.isEmpty() ){
+    var inputId: Int by remember {mutableStateOf(0)}
 
-        0
+    if (stringValuesArray.isNotEmpty() && stringValuesArray.count() > actualInputId){
+
+        stringValuesArray.add("")
+        actualInputId += 1
+        inputId = actualInputId
 
     }else{
 
-        stringValuesArray.count()
+        stringValuesArray.add("")
+        actualInputId += 1
 
     }
 
     var text: String by remember { mutableStateOf("") }
 
-
-
     OutlinedTextField(value = text, onValueChange = {  text = it  }, label = { Text(text = label) }, modifier = Modifier
         .fillMaxWidth()
         .wrapContentWidth(Alignment.CenterHorizontally)
     )
+
+    Button(onClick = { println(inputId)}) { }
+
+    stringValuesArray[inputId] = text
 
 }
 
@@ -167,9 +174,7 @@ fun Preview() {
                         ){
 
                             MyText("NOMINA", MaterialTheme.colorScheme.onBackground, MaterialTheme.typography.titleLarge)
-                            Button(onClick = { println(stringValuesArray)}) {
-                                
-                            }
+
                             MyInput("salario basico:")
                             Spacer(modifier = Modifier.height(2.dp))
                             MyInput("dias")
